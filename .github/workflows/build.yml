@@ -14,8 +14,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
+      - name: Configure npm auth
+        shell: bash
+        env:
+          NPMRC: ${{ secrets.NPMRC }}
+        run: |
+          if [ -n "$NPMRC" ]; then
+            printf '%s\n' "$NPMRC" > ~/.npmrc
+          fi
+      - run: npm install
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
@@ -34,8 +41,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
+      - name: Configure npm auth
+        shell: bash
+        env:
+          NPMRC: ${{ secrets.NPMRC }}
+        run: |
+          if [ -n "$NPMRC" ]; then
+            printf '%s\n' "$NPMRC" > ~/.npmrc
+          fi
+      - run: npm install
       - run: npm run build:binary
       - uses: actions/upload-artifact@v4
         with:

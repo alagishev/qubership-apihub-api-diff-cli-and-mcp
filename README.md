@@ -43,3 +43,15 @@ npm run build:binary
 ```
 
 The binary is written to `dist/apihub-api-diff` or `dist/apihub-api-diff.exe`.
+
+## GitHub Actions
+
+Add a repository secret named `NPMRC` with the full `.npmrc` content required to install `@netcracker/*` packages. Example:
+
+```text
+@netcracker:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=<github-token>
+registry=https://registry.npmjs.org/
+```
+
+Push a tag like `v0.1.0` to create a GitHub Release. The release workflow builds Linux, Windows, and macOS binaries and attaches them to the release.

@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset-name: apihub-api-diff-linux-x64
+            binary-path: dist/apihub-api-diff
+          - os: windows-latest
+            asset-name: apihub-api-diff-windows-x64.exe
+            binary-path: dist/apihub-api-diff.exe
+          - os: macos-latest
+            asset-name: apihub-api-diff-macos-x64
+            binary-path: dist/apihub-api-diff
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Configure npm auth
+        shell: bash
+        env:
+          NPMRC: ${{ secrets.NPMRC }}
+        run: |
+          if [ -n "$NPMRC" ]; then
+            printf '%s\n' "$NPMRC" > ~/.npmrc
+          fi
+      - run: npm install
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build:binary
+      - name: Prepare release asset
+        shell: bash
+        run: |
+          mkdir -p release-assets
+          cp "${{ matrix.binary-path }}" "release-assets/${{ matrix.asset-name }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset-name }}
+          path: release-assets/${{ matrix.asset-name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" release-assets/* --clobber
+          else
+            gh release create "$TAG_NAME" release-assets/* \
+              --title "$TAG_NAME" \
+              --notes "Automated release for $TAG_NAME" \
+              --verify-tag
+          fi
