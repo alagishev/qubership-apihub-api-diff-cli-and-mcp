@@ -1,0 +1,6 @@
+export { createDiffResult } from './engine/diff-engine.js'
+export { renderHtmlReport } from './reports/html-report.js'
+export { renderJsonReport } from './reports/json-report.js'
+export { renderMarkdownReport } from './reports/markdown-report.js'
+export type { DiffEngineOptions } from './engine/diff-engine.js'
+export type { DiffResult, FailOn, OutputFormat } from './schema/diff-result.js'
