@@ -73,7 +73,7 @@ export const createDiffResult = async (options: DiffEngineOptions): Promise<Diff
 }
 
 interface ReadInputResult {
-  content: Uint8Array
+  content: Buffer
   fileId: string
   meta: DiffInput
 }

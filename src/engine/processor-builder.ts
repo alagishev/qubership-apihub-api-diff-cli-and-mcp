@@ -14,7 +14,7 @@ export const CURRENT_VERSION = 'current'
 
 export interface BuildVersionInput {
   fileId: string
-  content: Uint8Array
+  content: Buffer
   version: typeof PREVIOUS_VERSION | typeof CURRENT_VERSION
 }
 
@@ -50,7 +50,7 @@ export const buildVersion = async (
         if (fileId !== input.fileId) {
           return null
         }
-        return new Blob([input.content])
+        return new Blob([toArrayBuffer(input.content)])
       },
       versionResolver: async (packageId, version) => {
         if (!previous || packageId !== CLI_PACKAGE_ID || version !== PREVIOUS_VERSION) {
@@ -136,4 +136,10 @@ const getOperationTypes = (result: BuildResult): OperationTypes[] => {
 const serializePreviousDocument = (previous: BuiltVersion, document: VersionDocument): BlobPart => {
   const apiBuilder = previous.builder.apiBuilders.find(builder => builder.types.includes(document.type))
   return apiBuilder ? apiBuilder.dumpDocument(document) : ''
+}
+
+const toArrayBuffer = (buffer: Buffer): ArrayBuffer => {
+  const arrayBuffer = new ArrayBuffer(buffer.byteLength)
+  new Uint8Array(arrayBuffer).set(buffer)
+  return arrayBuffer
 }
