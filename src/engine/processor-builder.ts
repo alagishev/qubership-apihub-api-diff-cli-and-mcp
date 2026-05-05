@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module'
+import { join } from 'node:path'
 import type {
   BuilderParams,
   BuildConfig,
@@ -8,7 +9,6 @@ import type {
   VersionDocument,
 } from '@netcracker/qubership-apihub-api-processor'
 
-const require = createRequire(import.meta.url)
 const {
   BUILD_TYPE,
   PackageVersionBuilder,
@@ -159,12 +159,11 @@ const toArrayBuffer = (buffer: Buffer): ArrayBuffer => {
 }
 
 function loadApiProcessor(): ApiProcessorRuntime {
-  try {
+  if (typeof require === 'function') {
     // Direct require lets esbuild include api-processor in the SEA bundle.
     return require('@netcracker/qubership-apihub-api-processor') as ApiProcessorRuntime
-  } catch {
-    const requireBase = typeof import.meta.url === 'string' ? import.meta.url : process.execPath
-    const runtimeRequire = createRequire(requireBase)
-    return runtimeRequire('@netcracker/qubership-apihub-api-processor') as ApiProcessorRuntime
   }
+
+  const runtimeRequire = createRequire(join(process.cwd(), 'package.json'))
+  return runtimeRequire('@netcracker/qubership-apihub-api-processor') as ApiProcessorRuntime
 }

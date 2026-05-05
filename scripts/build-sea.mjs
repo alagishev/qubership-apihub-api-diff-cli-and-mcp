@@ -8,14 +8,13 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const outputName = platform === 'win32' ? 'apihub-api-diff.exe' : 'apihub-api-diff'
 const binaryPath = join(root, 'dist', outputName)
 const blobPath = join(root, 'dist', 'apihub-api-diff.blob')
-const postjectBinary = platform === 'win32' ? 'postject.cmd' : 'postject'
-const postjectPath = join(root, 'node_modules', '.bin', postjectBinary)
+const postjectCliPath = join(root, 'node_modules', 'postject', 'dist', 'cli.js')
 
 const run = (command, args) => {
   const result = spawnSync(command, args, {
     cwd: root,
     stdio: 'inherit',
-    shell: platform === 'win32',
+    shell: false,
   })
 
   if (result.status !== 0) {
@@ -23,8 +22,10 @@ const run = (command, args) => {
   }
 }
 
+const runNode = (args) => run(execPath, args)
+
 await mkdir(join(root, 'dist'), { recursive: true })
-run(execPath, ['--experimental-sea-config', 'sea-config.json'])
+runNode(['--experimental-sea-config', 'sea-config.json'])
 await copyFile(execPath, binaryPath)
 
 if (platform === 'darwin') {
@@ -43,7 +44,7 @@ if (platform === 'darwin') {
   postjectArgs.push('--macho-segment-name', 'NODE_SEA')
 }
 
-run(postjectPath, postjectArgs)
+runNode([postjectCliPath, ...postjectArgs])
 
 if (platform === 'darwin') {
   run('codesign', ['--sign', '-', binaryPath])
