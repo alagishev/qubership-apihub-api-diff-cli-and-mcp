@@ -28,4 +28,10 @@ Run the same binary as a local MCP server over stdio:
 apihub-api-diff mcp
 ```
 
-The MCP server exposes the `apihub_api_diff` tool. It accepts local `previousPath` and `currentPath` arguments and returns a JSON, Markdown, or HTML report as text content.
+The server advertises **`apihub_api_diff`**. On initialization it also sends **server instructions** (if your client surfaces them to the model) explaining when to diff API specs and how to choose formats:
+
+- **`md` (default)** — structured, LLM-friendly report for turning into a clear user answer.
+- **`json`** — exact structure, severity buckets; add **`includeValues: true`** for raw before/after field values.
+- **`html`** — only when the user wants a standalone file to open in a browser.
+
+Paths must be valid on the host where the MCP process runs. For the most detailed Markdown, use `includeValues: true` (adds pointer/value detail sections where available).

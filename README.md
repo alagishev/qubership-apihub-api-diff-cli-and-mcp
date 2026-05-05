@@ -46,7 +46,7 @@ The binary is written to `dist/apihub-api-diff` or `dist/apihub-api-diff.exe`.
 
 ## MCP Server
 
-The same binary can run as a local MCP server over stdio:
+The same binary can run as a local MCP server over stdio. On connect, the server returns **instructions** for the agent (when the client supports injecting them): when to diff API specs, preferred output formats, and how to summarize results for users.
 
 ```bash
 apihub-api-diff mcp
@@ -67,13 +67,19 @@ Cursor MCP configuration example:
 }
 ```
 
-The server exposes one tool, `apihub_api_diff`, with these arguments:
+### Tool: `apihub_api_diff`
 
-- `previousPath` - path to the previous API document.
-- `currentPath` - path to the current API document.
-- `format` - `json`, `md`, or `html`; default is `json`.
-- `includeValues` - include raw before/after values in JSON output.
-- `title` - optional report title.
+Compares two API description files on the **local machine** (paths must exist where the MCP server runs).
+
+| Argument | Purpose |
+| --- | --- |
+| `previousPath` | Baseline spec (old version). |
+| `currentPath` | Revised spec (new version). |
+| `format` | `md` (default, best for LLM-readable summaries), `json` (machine-readable / counts / piping), or `html` (single-file browser report when the user wants that). |
+| `includeValues` | `true` to attach concrete before/after values and richer Markdown detail; use for deep questions, expect larger output. |
+| `title` | Optional heading (release, ticket, branch name) for traceability in the report.
+
+**Agent-oriented usage:** Prefer Markdown + clear `title` for user-facing answers; use `json` with `includeValues: true` when the user needs exact delta evidence; reserve `html` for explicit “open in browser” requests.
 
 ## GitHub Actions
 

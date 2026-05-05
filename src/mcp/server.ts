@@ -3,6 +3,7 @@ import { renderHtmlReport } from '../reports/html-report.js'
 import { renderJsonReport } from '../reports/json-report.js'
 import { renderMarkdownReport } from '../reports/markdown-report.js'
 import { DiffResult, OutputFormat } from '../schema/diff-result.js'
+import { SERVER_INSTRUCTIONS } from './server-instructions.js'
 
 const SERVER_NAME = 'qubership-apihub-api-diff'
 const SERVER_VERSION = '0.1.0'
@@ -125,13 +126,17 @@ const initializeResult = (params: any): unknown => ({
     name: SERVER_NAME,
     version: SERVER_VERSION,
   },
+  instructions: SERVER_INSTRUCTIONS,
 })
+
+const DIFF_TOOL_DESCRIPTION =
+  'Compare two API description files (OpenAPI/Swagger YAML or JSON, AsyncAPI, GraphQL SDL, etc.) and return a categorized API changelog from the APIHUB api-processor (severity, action, scope per change). Use this when the user cares about breaking vs non-breaking API changes, migration impact, or a structured review between a baseline spec and a revised spec—not for generic line-by-line file diffs. Prefer format "md" (default) for readable Markdown you can turn into a structured user answer; use "json" with includeValues true for machine-readable output and concrete before/after field values; use "html" only when the user wants a standalone browser report.'
 
 const toolsListResult = (): unknown => ({
   tools: [
     {
       name: DIFF_TOOL_NAME,
-      description: 'Compare two API documents with APIHUB api-processor and return a categorized diff.',
+      description: DIFF_TOOL_DESCRIPTION,
       inputSchema: {
         type: 'object',
         additionalProperties: false,
@@ -139,26 +144,31 @@ const toolsListResult = (): unknown => ({
         properties: {
           previousPath: {
             type: 'string',
-            description: 'Path to the previous API document on the local filesystem.',
+            description:
+              'Absolute or workspace path to the baseline ("old") API document on the machine where this MCP server runs. Ensure the file exists before calling.',
           },
           currentPath: {
             type: 'string',
-            description: 'Path to the current API document on the local filesystem.',
+            description:
+              'Absolute or workspace path to the revised ("new") API document on the same machine. Together with previousPath this defines before → after.',
           },
           format: {
             type: 'string',
             enum: ['json', 'md', 'html'],
-            default: 'json',
-            description: 'Report format returned as text content.',
+            default: 'md',
+            description:
+              'Output shape of the tool response text. Default "md": best for LLM consumption and user-facing summaries (headings, tables). "json": use when you need precise counts, severity buckets, or to chain to other logic; pair with includeValues for raw before/after values. "html": single-page interactive report—only when the user explicitly wants to open it in a browser; avoid for chat-only explanations.',
           },
           includeValues: {
             type: 'boolean',
             default: false,
-            description: 'Include raw before/after values in JSON diff messages.',
+            description:
+              'When true, attaches concrete previous/next values (and richer detail in Markdown when applicable). Enable for deep dive questions ("what exactly changed in this schema?", "show old vs new example"). Increases payload size—summarize for the user unless they asked for full detail.',
           },
           title: {
             type: 'string',
-            description: 'Optional report title.',
+            description:
+              'Optional report title shown in the document heading (e.g. release names, ticket id). Helps users map the diff back to a branch, tag, or task.',
           },
         },
       },
@@ -217,7 +227,7 @@ const getRequiredString = (args: Record<string, unknown>, name: string): string 
 
 const getFormat = (value: unknown): OutputFormat => {
   if (value === undefined) {
-    return 'json'
+    return 'md'
   }
 
   if (value === 'json' || value === 'md' || value === 'html') {
