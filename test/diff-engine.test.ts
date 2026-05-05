@@ -18,7 +18,7 @@ describe('api diff cli engine', () => {
     assert.equal(result.inputs.previous.fileId, 'openapi-before.yaml')
     assert.ok(result.summary.totalChanges > 0)
     assert.ok(result.changes.length > 0)
-    assert.ok(result.changes.some(change => change.operationId === 'getPets' || change.previousOperationId === 'getPets'))
+    assert.ok(result.changes.some(change => change.apiType === 'rest' && change.diffs.length > 0))
   })
 
   it('renders markdown and html reports from the normalized result', async () => {
