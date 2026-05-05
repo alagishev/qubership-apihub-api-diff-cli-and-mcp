@@ -17,7 +17,7 @@
     "typecheck": "tsc --noEmit",
     "build": "npm run clean && node esbuild.config.mjs",
     "build:binary": "npm run build && node scripts/build-sea.mjs",
-    "test": "node --import tsx --test test/*.test.ts",
+    "test": "node --import tsx --test test/diff-engine.test.ts test/mcp-server.test.ts",
     "lint:check": "eslint -c .eslintrc.json . --ext .js,.mjs,.ts,.json --ignore-path .gitignore --max-warnings 0"
   },
   "dependencies": {
