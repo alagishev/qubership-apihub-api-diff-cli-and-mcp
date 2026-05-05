@@ -1,12 +1,23 @@
-import {
-  BUILD_TYPE,
+import { createRequire } from 'node:module'
+import type {
+  BuilderParams,
   BuildConfig,
   BuildResult,
   OperationTypes,
-  PackageVersionBuilder,
-  VERSION_STATUS,
+  PackageVersionBuilder as PackageVersionBuilderType,
   VersionDocument,
 } from '@netcracker/qubership-apihub-api-processor'
+
+const require = createRequire(import.meta.url)
+const {
+  BUILD_TYPE,
+  PackageVersionBuilder,
+  VERSION_STATUS,
+} = require('@netcracker/qubership-apihub-api-processor') as {
+  BUILD_TYPE: { BUILD: string }
+  PackageVersionBuilder: new (config: BuildConfig, params: BuilderParams) => PackageVersionBuilderType
+  VERSION_STATUS: { RELEASE: string }
+}
 
 export const CLI_PACKAGE_ID = 'apihub-api-diff-cli'
 export const PREVIOUS_VERSION = 'previous'
@@ -19,7 +30,7 @@ export interface BuildVersionInput {
 }
 
 export interface BuiltVersion {
-  builder: PackageVersionBuilder
+  builder: PackageVersionBuilderType
   result: BuildResult
 }
 
