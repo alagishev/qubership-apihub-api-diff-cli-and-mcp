@@ -13,7 +13,9 @@ const {
   BUILD_TYPE,
   PackageVersionBuilder,
   VERSION_STATUS,
-} = require('@netcracker/qubership-apihub-api-processor') as {
+} = loadApiProcessor()
+
+interface ApiProcessorRuntime {
   BUILD_TYPE: { BUILD: string }
   PackageVersionBuilder: new (config: BuildConfig, params: BuilderParams) => PackageVersionBuilderType
   VERSION_STATUS: { RELEASE: string }
@@ -154,4 +156,15 @@ const toArrayBuffer = (buffer: Buffer): ArrayBuffer => {
   const arrayBuffer = new ArrayBuffer(buffer.byteLength)
   new Uint8Array(arrayBuffer).set(buffer)
   return arrayBuffer
+}
+
+function loadApiProcessor(): ApiProcessorRuntime {
+  try {
+    // Direct require lets esbuild include api-processor in the SEA bundle.
+    return require('@netcracker/qubership-apihub-api-processor') as ApiProcessorRuntime
+  } catch {
+    const requireBase = typeof import.meta.url === 'string' ? import.meta.url : process.execPath
+    const runtimeRequire = createRequire(requireBase)
+    return runtimeRequire('@netcracker/qubership-apihub-api-processor') as ApiProcessorRuntime
+  }
 }
