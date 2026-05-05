@@ -1,4 +1,5 @@
 export { createDiffResult } from './engine/diff-engine.js'
+export { startMcpServer } from './mcp/server.js'
 export { renderHtmlReport } from './reports/html-report.js'
 export { renderJsonReport } from './reports/json-report.js'
 export { renderMarkdownReport } from './reports/markdown-report.js'

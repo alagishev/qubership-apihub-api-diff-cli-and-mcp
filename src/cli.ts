@@ -2,12 +2,18 @@ import { createDiffResult } from './engine/diff-engine.js'
 import { renderHtmlReport } from './reports/html-report.js'
 import { renderJsonReport } from './reports/json-report.js'
 import { renderMarkdownReport } from './reports/markdown-report.js'
+import { startMcpServer } from './mcp/server.js'
 import { HELP_TEXT, HelpRequested, parseCliOptions } from './utils/args.js'
 import { resolveExitCode } from './utils/exit-code.js'
 import { resolveOutputPath, writeOutput } from './utils/files.js'
 import { DiffResult, OutputFormat } from './schema/diff-result.js'
 
 const main = async (): Promise<void> => {
+  if (isMcpMode(process.argv.slice(2))) {
+    startMcpServer()
+    return
+  }
+
   const options = parseCliOptions(process.argv.slice(2))
 
   if (!options.quiet && options.output) {
@@ -43,6 +49,8 @@ const renderReport = (result: DiffResult, format: OutputFormat): string => {
 
   return renderJsonReport(result)
 }
+
+const isMcpMode = (argv: string[]): boolean => argv[0] === 'mcp' || argv.includes('--mcp')
 
 main().catch(error => {
   if (error instanceof HelpRequested) {

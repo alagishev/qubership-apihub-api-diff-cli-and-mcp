@@ -53,5 +53,5 @@ jobs:
       - run: npm run build:binary
       - uses: actions/upload-artifact@v4
         with:
-          name: apihub-api-diff-${{ runner.os }}
+          name: apihub-api-diff-cli-and-mcp-${{ runner.os }}
           path: dist/apihub-api-diff*

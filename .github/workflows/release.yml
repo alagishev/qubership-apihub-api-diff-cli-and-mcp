@@ -15,13 +15,13 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            asset-name: apihub-api-diff-linux-x64
+            asset-name: apihub-api-diff-cli-and-mcp-linux-x64
             binary-path: dist/apihub-api-diff
           - os: windows-latest
-            asset-name: apihub-api-diff-windows-x64.exe
+            asset-name: apihub-api-diff-cli-and-mcp-windows-x64.exe
             binary-path: dist/apihub-api-diff.exe
           - os: macos-latest
-            asset-name: apihub-api-diff-macos-x64
+            asset-name: apihub-api-diff-cli-and-mcp-macos-x64
             binary-path: dist/apihub-api-diff
     runs-on: ${{ matrix.os }}
     steps:

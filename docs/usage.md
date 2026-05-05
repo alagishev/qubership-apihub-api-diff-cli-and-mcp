@@ -19,3 +19,13 @@ Exit codes:
 - `0` means the command completed and the selected threshold did not match.
 - `1` means the command failed.
 - `2` means the diff matched the `--fail-on` threshold.
+
+## MCP Mode
+
+Run the same binary as a local MCP server over stdio:
+
+```bash
+apihub-api-diff mcp
+```
+
+The MCP server exposes the `apihub_api_diff` tool. It accepts local `previousPath` and `currentPath` arguments and returns a JSON, Markdown, or HTML report as text content.

@@ -64,6 +64,7 @@ const parseEnum = <T extends string>(name: string, value: unknown, allowed: read
 
 export const HELP_TEXT = `Usage:
   apihub-api-diff <previous-file> <current-file> [options]
+  apihub-api-diff mcp
 
 Options:
   -f, --format <json|md|html>       Output format. Default: json
@@ -74,4 +75,7 @@ Options:
       --title <text>                Report title
   -q, --quiet                       Suppress status messages
   -h, --help                        Show this help
+
+MCP:
+  Run "apihub-api-diff mcp" to start a local MCP server over stdio.
 `

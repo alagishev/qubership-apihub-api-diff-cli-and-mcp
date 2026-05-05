@@ -1,6 +1,6 @@
-# APIHUB API Diff CLI
+# APIHUB API Diff CLI and MCP
 
-Standalone CLI for categorized API diffs powered by `@netcracker/qubership-apihub-api-processor`.
+Standalone CLI and local MCP server for categorized API diffs powered by `@netcracker/qubership-apihub-api-processor`.
 
 ## Usage
 
@@ -43,6 +43,37 @@ npm run build:binary
 ```
 
 The binary is written to `dist/apihub-api-diff` or `dist/apihub-api-diff.exe`.
+
+## MCP Server
+
+The same binary can run as a local MCP server over stdio:
+
+```bash
+apihub-api-diff mcp
+```
+
+Cursor MCP configuration example:
+
+```json
+{
+  "mcpServers": {
+    "apihub-api-diff": {
+      "command": "apihub-api-diff",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}
+```
+
+The server exposes one tool, `apihub_api_diff`, with these arguments:
+
+- `previousPath` - path to the previous API document.
+- `currentPath` - path to the current API document.
+- `format` - `json`, `md`, or `html`; default is `json`.
+- `includeValues` - include raw before/after values in JSON output.
+- `title` - optional report title.
 
 ## GitHub Actions
 

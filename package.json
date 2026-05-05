@@ -1,7 +1,7 @@
 {
-  "name": "@netcracker/qubership-apihub-api-diff-cli",
+  "name": "@netcracker/qubership-apihub-api-diff-cli-and-mcp",
   "version": "0.1.0",
-  "description": "Standalone CLI for categorized API diffs powered by APIHUB api-processor.",
+  "description": "Standalone CLI and local MCP server for categorized API diffs powered by APIHUB api-processor.",
   "license": "Apache-2.0",
   "type": "module",
   "bin": {
