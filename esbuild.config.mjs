@@ -3,11 +3,11 @@ import { chmod } from 'node:fs/promises'
 
 await build({
   entryPoints: ['src/cli.ts'],
-  outfile: 'dist/cli.js',
+  outfile: 'dist/cli.cjs',
   bundle: true,
   platform: 'node',
   target: 'node20',
-  format: 'esm',
+  format: 'cjs',
   banner: {
     js: '#!/usr/bin/env node',
   },
@@ -15,4 +15,4 @@ await build({
   legalComments: 'external',
 })
 
-await chmod('dist/cli.js', 0o755)
+await chmod('dist/cli.cjs', 0o755)

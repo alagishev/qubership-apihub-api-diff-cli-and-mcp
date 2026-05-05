@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "bin": {
-    "apihub-api-diff": "./dist/cli.js"
+    "apihub-api-diff": "./dist/cli.cjs"
   },
   "files": [
     "dist",
