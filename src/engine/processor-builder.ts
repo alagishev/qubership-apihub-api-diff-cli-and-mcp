@@ -119,7 +119,7 @@ export const buildVersion = async (
 
 // Keep this value aligned with the api-processor dependency. The processor validates
 // historical versions against its own package version before comparing changelogs.
-export const API_PROCESSOR_VERSION = '5.2.2'
+export const API_PROCESSOR_VERSION = '5.2.1'
 
 const getOperationTypes = (result: BuildResult): OperationTypes[] => {
   const counts = new Map<OperationTypes['apiType'], number>()

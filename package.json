@@ -21,7 +21,7 @@
     "lint:check": "eslint -c .eslintrc.json . --ext .js,.mjs,.ts,.json --ignore-path .gitignore --max-warnings 0"
   },
   "dependencies": {
-    "@netcracker/qubership-apihub-api-processor": "5.2.2"
+    "@netcracker/qubership-apihub-api-processor": "5.2.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.0",
