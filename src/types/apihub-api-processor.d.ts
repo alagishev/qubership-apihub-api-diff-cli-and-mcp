@@ -102,6 +102,12 @@ declare module '@netcracker/qubership-apihub-api-processor' {
       apiType?: OperationsApiType,
     ) => Promise<{ documents: VersionDocument[]; packages: Record<string, unknown> } | null>
     rawDocumentResolver?: (version: VersionId, packageId: PackageId, slug: string) => Promise<File | null>
+    versionDeprecatedResolver?: (
+      apiType: OperationsApiType,
+      version?: VersionId,
+      packageId?: PackageId,
+      operationIds?: OperationId[],
+    ) => Promise<{ operations: ApiOperation[] } | null>
     versionReferencesResolver?: (version: VersionId, packageId?: PackageId) => Promise<Array<{ refId: string; version: string }>>
     versionComparisonResolver?: (
       version: VersionId,

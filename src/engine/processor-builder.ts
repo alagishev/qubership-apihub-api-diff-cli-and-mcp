@@ -115,6 +115,7 @@ export const buildVersion = async (
 
         return new File([serializePreviousDocument(previous, document)], document.filename)
       },
+      versionDeprecatedResolver: async () => ({ operations: [] }),
       versionReferencesResolver: async () => [],
       versionComparisonResolver: async () => null,
     },
